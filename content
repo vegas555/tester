@@ -1,0 +1,23 @@
+!pip install deeppavlov
+
+from deeppavlov import configs, build_model
+
+sentiment_model = build_model(configs.classifiers.sentiment_social_networks_ru, download=True)
+
+def analyze_sentiments(comments):
+    sentiments = sentiment_model(comments)
+    return sentiments
+
+comments_texts_sample = comments_texts[:100]  # Анализируем первые 100 комментариев для примера
+sentiments = analyze_sentiments(comments_texts_sample)
+
+sentiment_df = pd.DataFrame(sentiments, columns=['text', 'sentiment'])
+print(sentiment_df['sentiment'].value_counts())
+
+# Визуализация анализа настроений
+plt.figure(figsize=(10, 5))
+sentiment_df['sentiment'].value_counts().plot(kind='bar')
+plt.xlabel('Настроение')
+plt.ylabel('Количество комментариев')
+plt.title('Анализ настроений комментариев')
+plt.show()
